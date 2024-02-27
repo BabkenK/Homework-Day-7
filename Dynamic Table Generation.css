@@ -1,0 +1,6 @@
+.comment {
+  margin-left: 20px; /* Adjust indentation */
+  border-left: 2px solid #ddd; /* Visual separation for nesting levels */
+  padding: 8px;
+  margin-bottom: 8px;
+}
