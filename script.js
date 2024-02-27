@@ -1,53 +1,28 @@
-const employees = [{
-        id: 1,
-        name: "John Doe",
-        age: 30,
-        department: "Engineering",
-        role: {
-            title: "Frontend Developer",
-            level: "Mid"
-        },
-        contact: {
-            email: "john.doe@example.com",
-            phone: "123-456-7890"
-        },
-        skills: ["JavaScript", "React", "CSS"]
-    },
-    {
-        id: 2,
-        name: "Jane Smith",
-        age: 28,
-        department: "Design",
-        role: {
-            title: "UI/UX Designer",
-            level: "Senior"
-        },
-        contact: {
-            email: "jane.smith@example.com",
-            phone: "098-765-4321"
-        },
-        skills: ["Figma", "Sketch", "Adobe XD"]
-    },
+const comments = [
+  { id: 1, text: "This is the first comment", parentId: null, replies: [ { id: 2, text: "This is a reply to the first comment", parentId: 1, replies: [ { id: 3, text: "This is a nested reply", parentId: 2, replies: [] } ] } ] },
+  { id: 4, text: "This is an independent comment", parentId: null, replies: [] }
 ];
 
-function generateTable() {
-    const tableBody = document.querySelector('#employeeTable tbody');
-
-    employees.forEach(employee => {
-        const row = document.createElement('tr');
-
-        // Populate cells with employee data
-        row.innerHTML = `
-      <td>${employee.id}</td>
-      <td>${employee.name}</td>
-      <td>${employee.age}</td>
-      <td>${employee.department}</td>
-      <td>${employee.role.title}</td>
-      <td>${employee.role.level}</td>
-      <td>${employee.contact.email}</td>
-      <td>${employee.contact.phone}</td>
-      <td>${employee.skills.join(',')}</td>`;
-        tableBody.appendChild(row);
+function generateCommentHtml(comment, nestingLevel) {
+  const commentDiv = document.createElement('div');
+  commentDiv.classList.add('comment');
+  commentDiv.textContent = comment.text;
+  if (comment.replies.length > 0) {
+    comment.replies.forEach(reply => {
+      const replyHtml = generateCommentHtml(reply, nestingLevel + 1);
+      commentDiv.appendChild(replyHtml);
     });
+  }
+  return commentDiv;
 }
-generateTable();
+function appendCommentsToContainer(commentsArray, container, nestingLevel) {
+  container.innerHTML = '';
+  commentsArray.forEach(comment => {
+    if (comment.parentId === null) {
+      const commentHtml = generateCommentHtml(comment, nestingLevel);
+      container.appendChild(commentHtml);
+    }
+  });
+}
+const commentsContainer = document.getElementById('commentsContainer');
+appendCommentsToContainer(comments, commentsContainer, 0);
